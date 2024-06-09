@@ -46,14 +46,19 @@ public class FrmInicio extends javax.swing.JFrame {
         jMenu1.setText("Mantenimientos");
 
         jMeEstudiantes.setText("Estudiantes");
+        jMeEstudiantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMeEstudiantesActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMeEstudiantes);
 
         jMenuBar1.add(jMenu1);
 
         jMeCerrar.setText("Cerrar");
-        jMeCerrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMeCerrarActionPerformed(evt);
+        jMeCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMeCerrarMouseClicked(evt);
             }
         });
         jMenuBar1.add(jMeCerrar);
@@ -74,11 +79,14 @@ public class FrmInicio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMeCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMeCerrarActionPerformed
+    private void jMeEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMeEstudiantesActionPerformed
+         FrmEstudiantesLec frmEstudiantesLec = new FrmEstudiantesLec();
+        frmEstudiantesLec.setVisible(true);
+    }//GEN-LAST:event_jMeEstudiantesActionPerformed
+
+    private void jMeCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMeCerrarMouseClicked
         // TODO add your handling code here:
-        
-        // hola mundo
-    }//GEN-LAST:event_jMeCerrarActionPerformed
+    }//GEN-LAST:event_jMeCerrarMouseClicked
 
     /**
      * @param args the command line arguments
