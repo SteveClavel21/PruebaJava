@@ -76,6 +76,8 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void jMeCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMeCerrarActionPerformed
         // TODO add your handling code here:
+        
+        // hola mundo
     }//GEN-LAST:event_jMeCerrarActionPerformed
 
     /**
