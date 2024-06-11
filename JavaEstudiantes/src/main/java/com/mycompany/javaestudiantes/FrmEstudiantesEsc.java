@@ -6,6 +6,7 @@ package com.mycompany.javaestudiantes;
 
 import javax.swing.JOptionPane;
 import utilerias.OpcionesCRUD;
+
 import static utilerias.OpcionesCRUD.CREAR;
 import static utilerias.OpcionesCRUD.ELIMINAR;
 import static utilerias.OpcionesCRUD.MODIFICAR;
@@ -17,6 +18,7 @@ import static utilerias.OpcionesCRUD.MODIFICAR;
 public class FrmEstudiantesEsc extends javax.swing.JFrame {
 
     private OpcionesCRUD opcionCRUD;
+   
 
     /**
      * Creates new form FrmEstudiantesEsc
@@ -24,6 +26,7 @@ public class FrmEstudiantesEsc extends javax.swing.JFrame {
     public FrmEstudiantesEsc(OpcionesCRUD opcion) {
         this.opcionCRUD = opcion;
         initComponents();
+       
     }
 
     /**
