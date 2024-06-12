@@ -47,8 +47,6 @@ public class FrmEstudiantes extends javax.swing.JFrame {
         jTableEstudiantes = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jLabel1.setText("ID");
 
         jLabel2.setText("Nombre");

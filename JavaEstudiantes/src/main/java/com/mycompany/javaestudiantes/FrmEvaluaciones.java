@@ -4,6 +4,8 @@
  */
 package com.mycompany.javaestudiantes;
 
+import entidades.Evaluacione;
+
 /**
  *
  * @author MINEDUCYT
@@ -15,6 +17,9 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
      */
     public FrmEvaluaciones() {
         initComponents();
+         Evaluacione evaluacione = new Evaluacione();
+        evaluacione.cargardatosID(jComEstudiantes);
+        evaluacione.mostrarEvaluaciones(jTableEvaluacion);
     }
 
     /**
@@ -45,8 +50,6 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
         jBtnEliminar = new javax.swing.JButton();
         jComEstudiantes = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jLabel1.setText("Evaluaciones");
 
         jLabel2.setText("Titulo");
@@ -62,6 +65,11 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTableEvaluacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableEvaluacionMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableEvaluacion);
 
         jLabel3.setText("Descripcion");
@@ -76,11 +84,28 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
 
         jLabel6.setText("ID:");
 
+        jTextFieldId.setEnabled(false);
+
         jBtnCrear.setText("Crear");
+        jBtnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnCrearActionPerformed(evt);
+            }
+        });
 
         jBtnModificar.setText("Modificar");
+        jBtnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnModificarActionPerformed(evt);
+            }
+        });
 
         jBtnEliminar.setText("Eliminar");
+        jBtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnEliminarActionPerformed(evt);
+            }
+        });
 
         jComEstudiantes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -180,6 +205,33 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCrearActionPerformed
+        // TODO add your handling code here:
+           Evaluacione evaluacione = new Evaluacione();
+        evaluacione.crear(jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje,jComEstudiantes);
+        evaluacione.mostrarEvaluaciones(jTableEvaluacion);
+    }//GEN-LAST:event_jBtnCrearActionPerformed
+
+    private void jTableEvaluacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEvaluacionMouseClicked
+        // TODO add your handling code here:
+        Evaluacione evaluacione = new Evaluacione();
+        evaluacione.SeleccionarEvaluacion(jTableEvaluacion, jTextFieldId, jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje, jComEstudiantes);
+    }//GEN-LAST:event_jTableEvaluacionMouseClicked
+
+    private void jBtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnModificarActionPerformed
+        // TODO add your handling code here:
+        Evaluacione evaluacione = new Evaluacione();
+        evaluacione.ModificarEvaluacion(jTableEvaluacion, jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje, jComEstudiantes);
+        evaluacione.mostrarEvaluaciones(jTableEvaluacion);
+    }//GEN-LAST:event_jBtnModificarActionPerformed
+
+    private void jBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarActionPerformed
+        // TODO add your handling code here:
+        Evaluacione evaluacione = new Evaluacione();
+        evaluacione.EliminarEvaluacion(jTextFieldId);
+        evaluacione.mostrarEvaluaciones(jTableEvaluacion);
+    }//GEN-LAST:event_jBtnEliminarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -1,23 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entidades;
 
 import accesoadatos.ComunDB;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.Date;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -28,7 +25,7 @@ public class Evaluacione {
     private String evaluacionId;
     private String titulo;
     private String descripcion;
-    private LocalDate fecha;
+    private Date fecha;
     private double puntaje;
     private int estudianteId;
 
@@ -59,11 +56,11 @@ public class Evaluacione {
     }
 
     public LocalDate getFecha() {
-        return fecha;
+        return fecha.toLocalDate();
     }
 
     public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+        this.fecha = Date.valueOf(fecha);
     }
 
     public double getPuntaje() {
@@ -90,106 +87,194 @@ public class Evaluacione {
         this.estudiantes = estudiantes;
     }
 
-     public void crear(JTextField campoTitulo, JTextField campoDescripcion, JTextField campoFecha, JTextField campoPuntaje) {
-        String titulo = campoTitulo.getText();
-        String descripcion = campoDescripcion.getText();
-        String fecha = campoFecha.getText();
-        String puntaje = campoPuntaje.getText();
-        
-            
-
-        String consulta = "INSERT INTO Evaluaciones (Titulo, Descripcion, Fecha, Puntaje) VALUES (?, ?, ?, ?);";
+    // New Methods
+    public void cargardatosID(JComboBox<String> comboBox) {
+        comboBox.removeAllItems();
+        comboBox.addItem("Seleccione una cuenta"); // Agregar ítem predeterminado
+        String consulta = "SELECT EstudianteID, Nombre, Apellido, Correo, Carrera FROM Estudiantes;";
         try {
-            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-            cs.setString(1, titulo);
-            cs.setString(2, descripcion);
-            cs.setDate(3, Date.valueOf(fecha));
-            cs.setString(4, puntaje);
-            cs.execute();
+            ComunDB conexion = new ComunDB();
+            CallableStatement cs = conexion.obtenerConexion().prepareCall(consulta);
+            ResultSet rs = cs.executeQuery();
 
-            JOptionPane.showMessageDialog(null, "Se insertó correctamente la Evaluacion");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al insertar la Evaluacion: " + e.toString());
+            // Agregar los datos al JComboBox como String
+            while (rs.next()) {
+                // Obtener el valor del CuentaID
+                int EstudianteID = rs.getInt("EstudianteID");
+                // Agregar el valor como String al JComboBox
+                comboBox.addItem(EstudianteID != 0 ? String.valueOf(EstudianteID) : null);
+            }
+
+            rs.close();
+            // cs.close(); // Cierra el statement
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos del JComboBox: " + e.toString());
         }
     }
-     
-     public void mostrarEstudiantes(JTable tablaEvaluaciones) {
-        DefaultTableModel modelo = new DefaultTableModel();
-        TableRowSorter<TableModel> ordenarTabla = new TableRowSorter<>(modelo);
-        tablaEvaluaciones.setRowSorter(ordenarTabla);
 
-        modelo.addColumn("ID");
+    public void crear(JTextField paramTitulo, JTextField paramDescripcion, JTextField paramFecha, JTextField paramPuntaje, JComboBox<String> paramEstudianteId) {
+        // Verificar que todos los campos estén llenos
+        if (paramTitulo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo Título es obligatorio.");
+            return;
+        }
+        if (paramDescripcion.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo Descripción es obligatorio.");
+            return;
+        }
+        if (paramFecha.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo Fecha es obligatorio.");
+            return;
+        }
+        if (paramPuntaje.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo Puntaje es obligatorio.");
+            return;
+        }
+        if (paramEstudianteId.getSelectedItem() == null || paramEstudianteId.getSelectedItem().toString().equals("Seleccione un estudiante")) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un EstudianteID.");
+            return;
+        }
+
+        // Insertar la evaluación en la base de datos
+        String consulta = "INSERT INTO Evaluaciones (Titulo, Descripcion, Fecha, Puntaje, EstudianteID) VALUES (?, ?, ?, ?, ?)";
+        try {
+            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
+
+            // Convertir la fecha al formato adecuado para la base de datos
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            java.util.Date parsedDate = inputDateFormat.parse(paramFecha.getText());
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = outputDateFormat.format(parsedDate);
+
+            // Establecer los valores de los parámetros
+            cs.setString(1, paramTitulo.getText());
+            cs.setString(2, paramDescripcion.getText());
+            cs.setString(3, formattedDate);
+            cs.setDouble(4, Double.parseDouble(paramPuntaje.getText()));
+            cs.setInt(5, Integer.parseInt(paramEstudianteId.getSelectedItem().toString()));
+
+            // Ejecutar la consulta
+            cs.execute();
+
+            JOptionPane.showMessageDialog(null, "Se insertó correctamente la evaluación");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error: El puntaje debe ser un número.");
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al insertar la evaluación: " + e.getMessage());
+        }
+    }
+
+    public void mostrarEvaluaciones(JTable tablaEvaluaciones) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("EvaluacionID");
         modelo.addColumn("Titulo");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Fecha");
         modelo.addColumn("Puntaje");
+        modelo.addColumn("EstudianteID");
 
         tablaEvaluaciones.setModel(modelo);
 
-        String consulta = "SELECT * FROM Evaluaciones;";
-        try {
-            Statement st = ComunDB.obtenerConexion().createStatement();
-            ResultSet rs = st.executeQuery(consulta);
+        String sql = "SELECT * FROM Evaluaciones;";
+
+        try (Connection connection = ComunDB.obtenerConexion(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
             while (rs.next()) {
-                Object[] fila = new Object[5];
-                fila[0] = rs.getInt("EvaluacionID");
-                fila[1] = rs.getString("Titulo");
-                fila[2] = rs.getString("Descripcion");
-                fila[3] = rs.getDate("Fecha");
-                fila[4] = rs.getString("Puntaje");
-                modelo.addRow(fila);
+                Object[] datos = new Object[6];
+                datos[0] = rs.getString("EvaluacionID");
+                datos[1] = rs.getString("Titulo");
+                datos[2] = rs.getString("Descripcion");
+                datos[3] = rs.getDate("Fecha");
+                datos[4] = rs.getDouble("Puntaje");
+                datos[5] = rs.getInt("EstudianteID");
+
+                modelo.addRow(datos);
             }
-            tablaEvaluaciones.setModel(modelo);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al mostrar los Evaluaciones: " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error al mostrar los registros de evaluaciones: " + e.getMessage());
         }
     }
 
-    public void seleccionarEstudiante(JTable tablaEstudiantes, JTextField campoId, JTextField campoNombre, JTextField campoApellido, JTextField campoCorreo, JTextField campoCarrera) {
+    public void SeleccionarEvaluacion(JTable paramTablaEvaluacion, JTextField paramEvaluacionID, JTextField paramTitulo, JTextField paramDescripcion, JTextField paramFecha, JTextField paramPuntaje, JComboBox<String> paramEstudianteId) {
         try {
-            int fila = tablaEstudiantes.getSelectedRow();
-            if (fila >= 0) {
-                campoId.setText(tablaEstudiantes.getValueAt(fila, 0).toString());
-                campoNombre.setText(tablaEstudiantes.getValueAt(fila, 1).toString());
-                campoApellido.setText(tablaEstudiantes.getValueAt(fila, 2).toString());
-                campoCorreo.setText(tablaEstudiantes.getValueAt(fila, 3).toString());
-                campoCarrera.setText(tablaEstudiantes.getValueAt(fila, 4).toString());
+            int fila = paramTablaEvaluacion.getSelectedRow();
+            if (fila >= 0) { // Verifica que se ha seleccionado una fila válida
+                paramEvaluacionID.setText(paramTablaEvaluacion.getValueAt(fila, 0).toString());
+                paramTitulo.setText(paramTablaEvaluacion.getValueAt(fila, 1).toString());
+                paramDescripcion.setText(paramTablaEvaluacion.getValueAt(fila, 2).toString());
+                paramFecha.setText(paramTablaEvaluacion.getValueAt(fila, 3).toString());
+                paramPuntaje.setText(paramTablaEvaluacion.getValueAt(fila, 4).toString());
+
+                // Seleccionar el EstudianteID correspondiente en el JComboBox
+                String estudianteId = paramTablaEvaluacion.getValueAt(fila, 5).toString();
+                paramEstudianteId.setSelectedItem(estudianteId);
             } else {
-                JOptionPane.showMessageDialog(null, "Fila no seleccionada");
+                JOptionPane.showMessageDialog(null, "Ninguna fila seleccionada");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de selección: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al seleccionar la fila: " + e.toString());
         }
     }
 
-    public void modificarEstudiante(JTextField campoId, JTextField campoNombre, JTextField campoApellido, JTextField campoCorreo, JTextField campoCarrera) {
-        int estudianteId = Integer.parseInt(campoId.getText());
-
-        String consulta = "UPDATE Estudiantes SET Nombre = ?, Apellido = ?, Correo = ?, Carrera = ? WHERE EstudianteID = ?;";
+    public void ModificarEvaluacion(JTable paramTablaEvaluacion, JTextField paramTitulo, JTextField paramDescripcion, JTextField paramFecha, JTextField paramPuntaje, JComboBox<String> paramEstudianteId) {
         try {
-            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-            cs.setString(1, campoNombre.getText());
-            cs.setString(2, campoApellido.getText());
-            cs.setString(3, campoCorreo.getText());
-            cs.setString(4, campoCarrera.getText());
-            cs.setInt(5, estudianteId);
-            cs.execute();
-            JOptionPane.showMessageDialog(null, "Modificación exitosa");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al Modificar el Estudiante, error: " + e.toString());
+            // Check if a row is selected in the table
+            int selectedRow = paramTablaEvaluacion.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(null, "No row selected. Please select a row to modify.");
+                return;
+            }
+
+            // Retrieve EvaluacionID from the selected row
+            String evaluacionID = paramTablaEvaluacion.getValueAt(selectedRow, 0).toString();
+
+            // Convertir cadena de fecha a java.sql.Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            java.util.Date parsedDate = dateFormat.parse(paramFecha.getText());
+            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+
+            // Convert other fields
+            String titulo = paramTitulo.getText();
+            String descripcion = paramDescripcion.getText();
+            double puntaje = Double.parseDouble(paramPuntaje.getText());
+            int estudianteID = Integer.parseInt(paramEstudianteId.getSelectedItem().toString());
+
+            String consulta = "UPDATE Evaluaciones SET Titulo = ?, Descripcion = ?, Fecha = ?, Puntaje = ?, EstudianteID = ? WHERE EvaluacionID = ?;";
+
+            try {
+                CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
+                cs.setString(1, titulo);
+                cs.setString(2, descripcion);
+                cs.setDate(3, sqlDate);
+                cs.setDouble(4, puntaje);
+                cs.setInt(5, estudianteID);
+                cs.setString(6, evaluacionID);
+
+                cs.execute();
+                JOptionPane.showMessageDialog(null, "Modificación exitosa");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al Modificar, error: " + e.toString());
+            }
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error: Formato de número incorrecto.");
         }
     }
 
-    public void eliminarEstudiante(JTextField campoId) {
-        int evaluacionId = Integer.parseInt(campoId.getText());
-        String consulta = "DELETE FROM Evaluaciones WHERE EvaluacionID = ?;";
+    public void EliminarEvaluacion(JTextField evaluacionIDField) {
+        ComunDB conexion = new ComunDB();
+        String consulta = "DELETE FROM Evaluaciones WHERE EvaluacionID = ?";
         try {
-            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-            cs.setInt(1, evaluacionId);
+            String evaluacionID = evaluacionIDField.getText(); // Obtener el texto
+            CallableStatement cs = conexion.obtenerConexion().prepareCall(consulta);
+            cs.setString(1, evaluacionID); // Usar el valor aquí
             cs.execute();
-            JOptionPane.showMessageDialog(null, "Evaluacion con ID " + evaluacionId + " eliminado exitosamente");
+            JOptionPane.showMessageDialog(null, "Eliminación exitosa de la evaluación con ID: " + evaluacionID);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar el Evaluacion con ID " + evaluacionId + ": " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error al eliminar la evaluación con ID " + ", error: " + e.toString());
         }
     }
 }
