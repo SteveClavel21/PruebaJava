@@ -4,6 +4,7 @@
  */
 package com.mycompany.javaestudiantes;
 
+import entidades.Estudiante;
 import utilerias.OpcionesCRUD;
 /**
  *
@@ -135,8 +136,8 @@ public class FrmEstudiantesLec extends javax.swing.JFrame {
 
     private void jBtnIrACrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIrACrearActionPerformed
         opcionCRUD = OpcionesCRUD.CREAR;
-        FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD);
-        frmEstudiantesEsc.setTitle("Crear Estudiante");
+        FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD, new Estudiante());
+        frmEstudiantesEsc.setTitle("Crear estudiante");
         frmEstudiantesEsc.setVisible(true);
     }//GEN-LAST:event_jBtnIrACrearActionPerformed
 
@@ -146,18 +147,30 @@ public class FrmEstudiantesLec extends javax.swing.JFrame {
 
     private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
         opcionCRUD = OpcionesCRUD.MODIFICAR;
-        FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD);
-        frmEstudiantesEsc.setTitle("Modificar Estudiante");
+       FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD, new Estudiante());
+        frmEstudiantesEsc.setTitle("Modificar estudiante");
         frmEstudiantesEsc.setVisible(true);
+
     }//GEN-LAST:event_jBtnEditarActionPerformed
 
     private void jBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarActionPerformed
         opcionCRUD = OpcionesCRUD.ELIMINAR;
-        FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD);
-        frmEstudiantesEsc.setTitle("Eliminar Estudiante");
+        FrmEstudiantesEsc frmEstudiantesEsc = new FrmEstudiantesEsc(opcionCRUD, new Estudiante());
+        frmEstudiantesEsc.setTitle("Eliminar estudiante");
         frmEstudiantesEsc.setVisible(true);
+
     }//GEN-LAST:event_jBtnEliminarActionPerformed
 
+     private Estudiante obtenerDatos() {
+        Estudiante estudiante = new Estudiante();
+        int row = jTableEstudiantes.getSelectedRow();
+        estudiante.setEstudianteId((int) jTableEstudiantes.getValueAt(row, 0));
+        estudiante.setNombre(jTableEstudiantes.getValueAt(row, 1).toString());
+        estudiante.setApellido(jTableEstudiantes.getValueAt(row, 2).toString());
+        estudiante.setCorreo( jTableEstudiantes.getValueAt(row, 3).toString());
+        estudiante.setCarrera( jTableEstudiantes.getValueAt(row, 3).toString());
+        return estudiante;
+    }
     /**
      * @param args the command line arguments
      */

@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * @author MINEDUCYT
  */
 public class ComunDB {
-     static String connectionUrl = "workstation id=PruebaJava06DB.mssql.somee.com;packet size=4096;user id=Steven003_SQLLogin_1;pwd=vibbucn2q5;data source=PruebaJava06DB.mssql.somee.com;persist security info=False;initial catalog=PruebaJava06DB;TrustServerCertificate=True";
+     static String connectionUrl = "jdbc:sqlserver://PruebaJava06DB.mssql.somee.com;databaseName=PruebaJava06DB;user=Steven003_SQLLogin_1;password=vibbucn2q5;TrustServerCertificate=True;";
      public static Connection obtenerConexion() throws SQLException {
         // Registrar el Driver de la conexion a la base de datos SQL server
         // para que lo reconozca el servidor web

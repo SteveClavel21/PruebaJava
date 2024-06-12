@@ -17,6 +17,10 @@ import java.util.ArrayList;
  */
 public class EstudianteDAL {
     
+    
+    
+    
+    
      public static int crear(Estudiante estudiante) {
         try (Connection conn = ComunDB.obtenerConexion()) {
 
@@ -72,34 +76,56 @@ public class EstudianteDAL {
         }
     }
 
-   /* public static ArrayList<Producto> buscar(Producto productoSearch) {
-        ArrayList<Producto> productos = new ArrayList<>();
+    public static ArrayList<Estudiante> buscar(Estudiante estudianteSearch) {
+        ArrayList<Estudiante> estudiantes = new ArrayList<>();
         try (Connection conn = ComunDB.obtenerConexion()) {
-            String sql = "SELECT p.ProductoID, p.Nombre, p.Descripcion, p.Precio, p.CategoriaID, c.Nombre AS NombreCat FROM Productos p";
-             sql+=" INNER JOIN Categorias c ON c.CategoriaID= p.CategoriaID  ";
-            sql+=" WHERE p.Nombre LIKE ? ";
+            String sql = "SELECT e.EstudianteID, e.Nombre, e.Apellido, e.Correo, e.Carrera FROM Estudiantes e";
+            
+            sql+=" WHERE e.Nombre LIKE ? ";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, "%" + productoSearch.getNombre() + "%");
+                statement.setString(1, "%" + estudianteSearch.getNombre() + "%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        Producto producto = new Producto();
-                        producto.setProductoId(resultSet.getInt("ProductoID"));
-                        producto.setNombre(resultSet.getString("Nombre"));
-                        producto.setDescripcion(resultSet.getString("Descripcion"));
-                        producto.setPrecio(resultSet.getDouble("Precio"));
-                        producto.setCategoriaId(resultSet.getInt("CategoriaID"));
-                        Categoria categoria= new Categoria();
-                        categoria.setNombre(resultSet.getString("NombreCat"));
-                        producto.setCategoria(categoria);
-                        productos.add(producto);
+                        Estudiante estudiante = new Estudiante();
+                        estudiante.setEstudianteId(resultSet.getInt("EstudianteID"));
+                        estudiante.setNombre(resultSet.getString("Nombre"));
+                        estudiante.setApellido(resultSet.getString("Apellido"));
+                        estudiante.setCorreo(resultSet.getString("Correo"));
+                       estudiante.setCarrera(resultSet.getString("Carrera"));
+                       estudiantes.add(estudiante);
                     }
                 }
             } catch (SQLException e) {
-                throw new RuntimeException("Error al buscar productos", e);
+                throw new RuntimeException("Error al buscar estudiantes", e);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error al obtener la conexión a la base de datos", e);
         }
-        return productos; 
-    } */
+        return estudiantes; 
+    } 
+    
+   public static ArrayList<Estudiante> obtenerTodos() {
+        ArrayList<Estudiante> estudiantes = new ArrayList<>();
+        try (Connection conn = ComunDB.obtenerConexion()) {
+            String sql = "select EstudianteID, Nombre, Apellido, Correo, Carrera from Estudiantes";           
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {                              
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        int estudianteId = resultSet.getInt("EstudianteID");
+                        String nombre = resultSet.getString("Nombre");
+                        String apellido = resultSet.getString("Apellido");   
+                        String correo = resultSet.getString("Correo");
+                          String carrera = resultSet.getString("Carrera");
+                        Estudiante estudiante = new Estudiante(estudianteId,nombre,apellido,correo,carrera );
+                        estudiantes.add(estudiante);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Error al obtener los estudiantes", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener la conexión a la base de datos", e);
+        }
+        return estudiantes;
+   }
 }
