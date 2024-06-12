@@ -80,7 +80,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMeEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMeEstudiantesActionPerformed
-         FrmEstudiantesLec frmEstudiantesLec = new FrmEstudiantesLec();
+       FrmEstudiantes2 frmEstudiantesLec= new FrmEstudiantes2();
         frmEstudiantesLec.setVisible(true);
     }//GEN-LAST:event_jMeEstudiantesActionPerformed
 
