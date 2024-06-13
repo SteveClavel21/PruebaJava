@@ -37,8 +37,6 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableEvaluacion = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextDesc = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jTextFecha = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -49,6 +47,7 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
         jBtnModificar = new javax.swing.JButton();
         jBtnEliminar = new javax.swing.JButton();
         jComEstudiantes = new javax.swing.JComboBox<>();
+        jTextDesc = new javax.swing.JTextField();
 
         jLabel1.setText("Evaluaciones");
 
@@ -73,10 +72,6 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableEvaluacion);
 
         jLabel3.setText("Descripcion");
-
-        jTextDesc.setColumns(20);
-        jTextDesc.setRows(5);
-        jScrollPane2.setViewportView(jTextDesc);
 
         jLabel4.setText("Fecha");
 
@@ -135,16 +130,16 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextPuntaje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jTextTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComEstudiantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jTextTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                            .addComponent(jComEstudiantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextDesc))
+                        .addGap(19, 19, 19)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,14 +175,14 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jTextTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(37, 37, 37)))))
+                                .addGap(82, 82, 82)
+                                .addComponent(jLabel3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addComponent(jTextDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -204,25 +199,26 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCrearActionPerformed
         // TODO add your handling code here:
            Evaluacione evaluacione = new Evaluacione();
-        evaluacione.crear(jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje,jComEstudiantes);
+        evaluacione.crear(jTextTitulo, jTextDesc, jTextFecha, jTextPuntaje,jComEstudiantes);
         evaluacione.mostrarEvaluaciones(jTableEvaluacion);
     }//GEN-LAST:event_jBtnCrearActionPerformed
 
     private void jTableEvaluacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEvaluacionMouseClicked
         // TODO add your handling code here:
         Evaluacione evaluacione = new Evaluacione();
-        evaluacione.SeleccionarEvaluacion(jTableEvaluacion, jTextFieldId, jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje, jComEstudiantes);
+        evaluacione.SeleccionarEvaluacion(jTableEvaluacion, jTextFieldId, jTextTitulo, jTextDesc, jTextFecha, jTextPuntaje, jComEstudiantes);
     }//GEN-LAST:event_jTableEvaluacionMouseClicked
 
     private void jBtnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnModificarActionPerformed
         // TODO add your handling code here:
         Evaluacione evaluacione = new Evaluacione();
-        evaluacione.ModificarEvaluacion(jTableEvaluacion, jTextTitulo, jTextTitulo, jTextFecha, jTextPuntaje, jComEstudiantes);
+        evaluacione.ModificarEvaluacion(jTableEvaluacion, jTextTitulo, jTextDesc, jTextFecha, jTextPuntaje, jComEstudiantes);
         evaluacione.mostrarEvaluaciones(jTableEvaluacion);
     }//GEN-LAST:event_jBtnModificarActionPerformed
 
@@ -280,9 +276,8 @@ public class FrmEvaluaciones extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableEvaluacion;
-    private javax.swing.JTextArea jTextDesc;
+    private javax.swing.JTextField jTextDesc;
     private javax.swing.JTextField jTextFecha;
     private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextPuntaje;

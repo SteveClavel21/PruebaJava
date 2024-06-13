@@ -94,7 +94,8 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMeEstudiantesActionPerformed
 
     private void jMeCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMeCerrarMouseClicked
-        // TODO add your handling code here:
+        this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_jMeCerrarMouseClicked
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed

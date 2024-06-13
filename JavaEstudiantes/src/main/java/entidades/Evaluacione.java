@@ -90,7 +90,7 @@ public class Evaluacione {
     // New Methods
     public void cargardatosID(JComboBox<String> comboBox) {
         comboBox.removeAllItems();
-        comboBox.addItem("Seleccione una cuenta"); // Agregar ítem predeterminado
+        comboBox.addItem("Seleccione una NIE"); 
         String consulta = "SELECT EstudianteID, Nombre, Apellido, Correo, Carrera FROM Estudiantes;";
         try {
             ComunDB conexion = new ComunDB();
@@ -99,14 +99,14 @@ public class Evaluacione {
 
             // Agregar los datos al JComboBox como String
             while (rs.next()) {
-                // Obtener el valor del CuentaID
+                
                 int EstudianteID = rs.getInt("EstudianteID");
-                // Agregar el valor como String al JComboBox
+                
                 comboBox.addItem(EstudianteID != 0 ? String.valueOf(EstudianteID) : null);
             }
 
             rs.close();
-            // cs.close(); // Cierra el statement
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al cargar los datos del JComboBox: " + e.toString());
         }
@@ -135,18 +135,18 @@ public class Evaluacione {
             return;
         }
 
-        // Insertar la evaluación en la base de datos
+        
         String consulta = "INSERT INTO Evaluaciones (Titulo, Descripcion, Fecha, Puntaje, EstudianteID) VALUES (?, ?, ?, ?, ?)";
         try {
             CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
 
-            // Convertir la fecha al formato adecuado para la base de datos
+            
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
             java.util.Date parsedDate = inputDateFormat.parse(paramFecha.getText());
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = outputDateFormat.format(parsedDate);
 
-            // Establecer los valores de los parámetros
+            
             cs.setString(1, paramTitulo.getText());
             cs.setString(2, paramDescripcion.getText());
             cs.setString(3, formattedDate);
@@ -173,7 +173,7 @@ public class Evaluacione {
         modelo.addColumn("Descripcion");
         modelo.addColumn("Fecha");
         modelo.addColumn("Puntaje");
-        modelo.addColumn("EstudianteID");
+        modelo.addColumn("NIE");
 
         tablaEvaluaciones.setModel(modelo);
 
